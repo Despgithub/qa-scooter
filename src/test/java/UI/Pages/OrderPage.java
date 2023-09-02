@@ -3,6 +3,12 @@ package UI.Pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class OrderPage {
 
@@ -18,6 +24,8 @@ public class OrderPage {
     private final static String SCOOTER_COLOUR = "//label[text()='%s']";
     private final static By COMMENT_FIELD = By.xpath("//input[@placeholder='Комментарий для курьера']");
     private final static By ORDER_BUTTON = By.xpath("//div[contains(@class,'Order_Buttons')]//button[text()='Заказать']");
+    private final static By SCOOTER_LOGO = By.xpath("//img[@alt='Scooter']");
+    private final static By ERROR_MESAGES = By.xpath("//div[contains(@class,'Order_Content')]//div[contains(@class,'Input_ErrorMessage') or contains(@class,'Order_MetroError')]");
 
     private final WebDriver driver;
 
@@ -85,6 +93,32 @@ public class OrderPage {
         chooseScooterColour(colour);
         inputComment(comment);
         clickOrderButton();
+    }
+
+    public void checkScooterLink() {
+        driver.findElement(SCOOTER_LOGO).click();
+        String currentUrl = driver.getCurrentUrl();
+        assertEquals("Ссылка не совпадает", "https://qa-scooter.praktikum-services.ru/", currentUrl);
+    }
+
+    public void checkErrors() {
+        inputAddress("1");
+        clickNextButton();
+        List<WebElement> elements = driver.findElements(ERROR_MESAGES);
+        for (int i = 0; i < elements.size(); i++) {
+            String error = elements.get(i).getText();
+            if (i == 0) {
+                assertTrue(elements.get(i).isDisplayed() && error.equals("Введите корректное имя"));
+            } else if (i == 1) {
+                assertTrue(elements.get(i).isDisplayed() && error.equals("Введите корректную фамилию"));
+            } else if (i == 2) {
+                assertTrue(elements.get(i).isDisplayed() && error.equals("Введите корректный адрес"));
+            } else if (i == 3) {
+                assertTrue(elements.get(i).isDisplayed() && error.equals("Выберите станцию"));
+            } else if (i == 4) {
+                assertTrue(elements.get(i).isDisplayed() && error.equals("Введите корректный номер"));
+            }
+        }
     }
 
 }

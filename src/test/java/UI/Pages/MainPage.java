@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class MainPage {
 
@@ -22,6 +23,11 @@ public class MainPage {
     private final static String ORDER_BUTTONS = "//button[text()='Заказать']";
     private final static By HEADER_ORDER_BUTTON = By.xpath("//div[contains(@class,'Header_Nav')]" + ORDER_BUTTONS);
     private final static By HOME_ORDER_BUTTON = By.xpath("//div[contains(@class,'Home_FinishButton')]" + ORDER_BUTTONS);
+    private final static By YANDEX_LOGO = By.xpath("//img[@alt='Yandex']");
+    private final static By ORDER_STATUS_BUTTON = By.xpath("//button[text()='Статус заказа']");
+    private final static By INPUT_ORDER_FIELD = By.xpath("//input[@placeholder='Введите номер заказа']");
+    private final static By GO_BUTTON = By.xpath("//button[text()='Go!']");
+    private final static By NOT_FOUND_IMAGE = By.xpath("//div[contains(@class,'Track_NotFound')]//img[@alt='Not found']");
 
 
     private final WebDriver driver;
@@ -84,6 +90,43 @@ public class MainPage {
                     .until(ExpectedConditions.visibilityOfElementLocated(HOME_ORDER_BUTTON));
             driver.findElement(HOME_ORDER_BUTTON).click();
         }
+    }
+
+    public void checkYandexLink() {
+        String originalWindow = driver.getWindowHandle();
+        driver.findElement(YANDEX_LOGO).click();
+        for (String windowHandle : driver.getWindowHandles()) {
+            if (!originalWindow.contentEquals(windowHandle)) {
+                driver.switchTo().window(windowHandle);
+                break;
+            }
+        }
+        new WebDriverWait(driver, Duration.ofSeconds(3)).until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[text()='Новости']")));
+        String currentUrl = driver.getCurrentUrl();
+        assertEquals("Ссылка не совпадает", "https://dzen.ru/?yredirect=true", currentUrl);
+    }
+
+    public void clickStatusOrderButton() {
+        driver.findElement(ORDER_STATUS_BUTTON).click();
+    }
+
+    public void inputOrderNumber(String orderNumber) {
+        new WebDriverWait(driver, Duration.ofSeconds(2))
+                .until(ExpectedConditions.visibilityOfElementLocated(INPUT_ORDER_FIELD));
+        driver.findElement(INPUT_ORDER_FIELD).sendKeys(orderNumber);
+    }
+
+    public void clickGoButton() {
+        driver.findElement(GO_BUTTON).click();
+        new WebDriverWait(driver, Duration.ofSeconds(3))
+                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//Button[text()='Посмотреть']")));
+    }
+
+    public void checkErrorOrderNumber() {
+        clickStatusOrderButton();
+        inputOrderNumber("000");
+        clickGoButton();
+        assertTrue(driver.findElement(NOT_FOUND_IMAGE).isDisplayed());
     }
 
 }
