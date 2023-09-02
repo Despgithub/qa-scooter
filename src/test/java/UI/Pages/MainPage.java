@@ -126,7 +126,7 @@ public class MainPage {
         clickStatusOrderButton();
         inputOrderNumber("000");
         clickGoButton();
-        assertTrue(driver.findElement(NOT_FOUND_IMAGE).isDisplayed());
+        assertTrue("Не появилась картинка с отсутствием заказа", driver.findElement(NOT_FOUND_IMAGE).isDisplayed());
     }
 
 }
