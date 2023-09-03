@@ -1,4 +1,4 @@
-package UI.Pages;
+package ui.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -46,43 +46,39 @@ public class MainPage {
         driver.get("https://qa-scooter.praktikum-services.ru/");
     }
 
-    public void checkQuestions() {
+    public void checkQuestion(int questionNumber) {
+        questionNumber -= 1;
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", driver.findElement(QUESTIONS_BLOCK));
         new WebDriverWait(driver, Duration.ofSeconds(3))
                 .until(ExpectedConditions.visibilityOfElementLocated(QUESTIONS_BLOCK));
-        List<WebElement> questions = driver.findElements(QUESTIONS);
-        assertEquals("Количество вопросов изменилось", questions.size(), 8);
-        for (int i = 0; i < questions.size(); i++) {
-            driver.findElement(By.xpath(String.format(QUESTION, i))).click();
-            new WebDriverWait(driver, Duration.ofSeconds(2))
-                    .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(ANSWER, i))));
-            String question = driver.findElement(By.xpath(String.format(QUESTION, i))).getText();
-            String answer = driver.findElement(By.xpath(String.format(ANSWER, i))).getText();
-            if (i == 0) {
-                assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Сутки — 400 рублей. Оплата курьеру — наличными или картой.", answer);
-            } else if (i == 1) {
-                assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим.", answer);
-            } else if (i == 2) {
-                assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30.", answer);
-            } else if (i == 3) {
-                assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Только начиная с завтрашнего дня. Но скоро станем расторопнее.", answer);
-            } else if (i == 4) {
-                assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010.", answer);
-            } else if (i == 5) {
-                assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится.", answer);
-            } else if (i == 6) {
-                assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои.", answer);
-            } else if (i == 7) {
-                assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Да, обязательно. Всем самокатов! И Москве, и Московской области.", answer);
-            }
+        driver.findElement(By.xpath(String.format(QUESTION, questionNumber))).click();
+        new WebDriverWait(driver, Duration.ofSeconds(2))
+                .until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(ANSWER, questionNumber))));
+        String question = driver.findElement(By.xpath(String.format(QUESTION, questionNumber))).getText();
+        String answer = driver.findElement(By.xpath(String.format(ANSWER, questionNumber))).getText();
+        if (questionNumber == 0) {
+            assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Сутки — 400 рублей. Оплата курьеру — наличными или картой.", answer);
+        } else if (questionNumber == 1) {
+            assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Пока что у нас так: один заказ — один самокат. Если хотите покататься с друзьями, можете просто сделать несколько заказов — один за другим.", answer);
+        } else if (questionNumber == 2) {
+            assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Допустим, вы оформляете заказ на 8 мая. Мы привозим самокат 8 мая в течение дня. Отсчёт времени аренды начинается с момента, когда вы оплатите заказ курьеру. Если мы привезли самокат 8 мая в 20:30, суточная аренда закончится 9 мая в 20:30.", answer);
+        } else if (questionNumber == 3) {
+            assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Только начиная с завтрашнего дня. Но скоро станем расторопнее.", answer);
+        } else if (questionNumber == 4) {
+            assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Пока что нет! Но если что-то срочное — всегда можно позвонить в поддержку по красивому номеру 1010.", answer);
+        } else if (questionNumber == 5) {
+            assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Самокат приезжает к вам с полной зарядкой. Этого хватает на восемь суток — даже если будете кататься без передышек и во сне. Зарядка не понадобится.", answer);
+        } else if (questionNumber == 6) {
+            assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Да, пока самокат не привезли. Штрафа не будет, объяснительной записки тоже не попросим. Все же свои.", answer);
+        } else if (questionNumber == 7) {
+            assertEquals(String.format("Ответ на вопрос \"%s\" не соответствует ожидаемому!", question), "Да, обязательно. Всем самокатов! И Москве, и Московской области.", answer);
         }
     }
 
-    public void clickOrderButton() {
+    public void clickOrderButton(boolean button) {
         List<WebElement> buttons = driver.findElements(By.xpath(ORDER_BUTTONS));
         assertEquals("Количество кнопок на странице не равно 2", 2, buttons.size());
-        int button = (int) ((Math.random() * (2)));
-        if (button == 0) {
+        if (button) {
             driver.findElement(HEADER_ORDER_BUTTON).click();
         } else {
             ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView();", driver.findElement(HOME_ORDER_BUTTON));

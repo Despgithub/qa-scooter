@@ -1,12 +1,12 @@
-package UI;
+package ui;
 
-import UI.Pages.MainPage;
-import UI.Pages.OrderPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
+import ui.pages.MainPage;
+import ui.pages.OrderPage;
 
 public class AdditionalTest {
     private WebDriver driver;
@@ -22,8 +22,7 @@ public class AdditionalTest {
     public void clickScooterLogo() {
         MainPage mainPage = new MainPage(driver);
         mainPage.open();
-        mainPage.clickConfirmCookieButton();
-        mainPage.clickOrderButton();
+        mainPage.clickOrderButton(true);
         OrderPage orderPage = new OrderPage(driver);
         orderPage.checkScooterLink();
     }
@@ -39,8 +38,7 @@ public class AdditionalTest {
     public void orderErrors() {
         MainPage mainPage = new MainPage(driver);
         mainPage.open();
-        mainPage.clickConfirmCookieButton();
-        mainPage.clickOrderButton();
+        mainPage.clickOrderButton(true);
         OrderPage orderPage = new OrderPage(driver);
         orderPage.checkErrors();
     }
